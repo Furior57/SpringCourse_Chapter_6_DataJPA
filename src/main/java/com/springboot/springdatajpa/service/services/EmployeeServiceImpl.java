@@ -2,37 +2,47 @@ package com.springboot.springdatajpa.service.services;
 
 
 import com.springboot.springdatajpa.entity.Employee;
-import com.springboot.springdatajpa.service.DAO.EmployeeDAO;
+import com.springboot.springdatajpa.service.DAO.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
+    // Переименуем это поле. Теперь уберем со всех методом аннотацию @Transactional
     @Autowired
-    private EmployeeDAO employeeDAO;
+    private EmployeeRepository employeeRepository;
+    // А теперь смотрим как записываются CRUD операции:
+    // findAll(), findById(),save() - добавляет\изменяет работника, deleteById(),
+    //
+
     @Override
-    @Transactional
     public List<Employee> getAllEmployees() {
-        return employeeDAO.getAllEmployees();
+        return employeeRepository.findAll();
     }
 
     @Override
-    @Transactional
     public void saveEmployee(Employee employee) {
-        employeeDAO.saveEmployee(employee);
+        employeeRepository.save(employee);
     }
 
     @Override
-    @Transactional
     public Employee getEmployee(int id) {
-        return employeeDAO.getEmployee(id);
+        // Этот метод возвращает Employee, а метод findById() возвращает объект Optional.
+        // Для начала мы проверим не пустой ли это объект и возвращаем либо объект, либо null.
+        // Сделаем это мы вот такой красивой записью. Перейдем обратно в интерфейс EmployeeRepository.
+        return employeeRepository.findById(id).orElse(null);
     }
 
     @Override
-    @Transactional
     public void deleteEmployee(int id) {
-        employeeDAO.deleteEmployee(id);
+        employeeRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Employee> findAllByName(String name) {
+        return employeeRepository.findAllByName(name);
     }
 }

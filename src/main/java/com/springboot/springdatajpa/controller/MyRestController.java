@@ -8,13 +8,6 @@ import org.springframework.web.bind.annotation.*;
 
 
 import java.util.List;
-// Контроллер изменяться не будет, просто взглянем на него снова и запустим наш проект.
-// Сами Tomcat мы теперь не конфигурируем, для доступа к определенным методам контроллера
-// мы прописываем http://localhost:8080/api +ссылку метода который нас интересует.
-
-// В конце лекции необходимо отметить важность файла application.properties, весь проект можно настроить
-// с помощью этого файла, полный список настроек огромен необходимо будет изучать самому,
-// а сейчас перейдем в него и посмотрим как мы можем настроить путь к сервлету и порт подключения./
 @RestController
 @RequestMapping("/api")
 public class MyRestController {
@@ -52,5 +45,11 @@ public class MyRestController {
         service.deleteEmployee(id);
         return "Employee with ID="+id+" was deleted.";
     }
-
+    // Как можно догадаться URL передается методом GET, после /employees идет критерий
+    // по которому ищем, а далее используем PathVariable, имя аргумента находится в
+    // фигурных скобках, оно должно совпадать с именем параметра, который мы передаем в метод./
+    @GetMapping("/employees/name/{name}")
+    public List<Employee> findAllByName(@PathVariable String name) {
+        return  service.findAllByName(name);
+    }
 }
